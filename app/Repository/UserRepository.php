@@ -42,4 +42,19 @@ class UserRepository
 
         return false;
     }
+
+    public function getUserByIdAndWeb($id, $web)
+    {
+        $user = User::where('id', $id)
+            ->whereHas('websites', function ($q) use ($web) {
+                $q->where('website_id', $web->id);
+            })
+            ->first();
+
+        if ($user) {
+            return $user;
+        }
+
+        return false;
+    }
 }

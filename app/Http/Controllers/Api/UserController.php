@@ -40,9 +40,26 @@ class UserController extends \App\Http\Controllers\Controller
         return response()->json($addUser);
     }
 
-    public function checkUser(Request $request)
+    public function getUser(Request $request)
     {
+        $auth = $request->input('auth');
+        $webAuth = $this->webHelper->checkWeb($auth);
 
+        if ($webAuth == false) {
+            return response()->json([
+                'code' => 400,
+                'messager' => "unauthorized"
+            ], 400);
+        }
+
+        $payload = $request->input('payload');
+        $addUser = $this->userService->getUser($payload, $webAuth);
+
+        if ($addUser['status'] == false) {
+            return response()->json($addUser, 500);
+        }
+
+        return response()->json($addUser);
     }
 
     public function login(Request $request)

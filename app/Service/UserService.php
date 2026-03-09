@@ -29,6 +29,12 @@ class UserService
         return $user;
     }
 
+    public function getUserById($userId, $web)
+    {
+        $user = $this->userRepository->getUserByIdAndWeb($userId, $web);
+        return $user;
+    }
+
     public function addUser($data, $webAuth)
     {
         $dataUser = [
@@ -113,6 +119,30 @@ class UserService
                 "google_id" => $check->google_id,
                 "role" => $check->role,
             ]
+        ];
+    }
+
+    public function getUser($payload, $webAuth)
+    {
+        $user = $this->getUserById($payload['user_id'], $webAuth);
+        if ($user) {
+            return [
+                "status" => true,
+                "code" => 200,
+                "user" => [
+                    "id" => $user->id,
+                    "name" => $user->name,
+                    "email" => $user->email,
+                    "google_id" => $user->google_id,
+                    "role" => $user->role,
+                ]
+            ];
+        }
+
+        return [
+            "status" => false,
+            "code" => 500,
+            "messager" => "The user does not exist."
         ];
     }
 }
