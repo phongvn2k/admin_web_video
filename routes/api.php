@@ -23,3 +23,4 @@ Route::post('/add-user', [AuthController::class, 'addUser']);
 Route::post('/get-user', [AuthController::class, 'getUser']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/reset-pass/get-code', [AuthController::class, 'getCodeResetPassword']);
+Route::post('/reset-pass', [AuthController::class, 'resetPass']);

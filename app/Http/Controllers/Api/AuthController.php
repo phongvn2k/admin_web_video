@@ -105,4 +105,26 @@ class AuthController extends \App\Http\Controllers\Controller
 
         return response()->json($code);
     }
+
+    public function resetPass(Request $request)
+    {
+        $auth = $request->input('auth');
+        $webAuth = $this->webHelper->checkWeb($auth);
+
+        if ($webAuth == false) {
+            return response()->json([
+                'code' => 400,
+                'messager' => "unauthorized"
+            ], 400);
+        }
+
+        $payload = $request->input('payload');
+        $code = $this->authService->resetPassword($payload, $webAuth);
+
+        if ($code['status'] == false) {
+            return response()->json($code, 500);
+        }
+
+        return response()->json($code);
+    }
 }

@@ -176,4 +176,38 @@ class AuthService
             "messager" => "The user does not exist."
         ];
     }
+
+    public function resetPassword($payload, $webAuth)
+    {
+        $user = $this->getUserById($payload['user_id'], $webAuth);
+        if ($user) {
+            $code = $user->reset_code;
+
+            if ($code == $payload['reset_code']) {
+                $newPass = Hash::make($payload['new-pass']);
+                $this->userRepository->updateUserById(
+                    $payload['user_id'],
+                    ["password" => $newPass]
+                );
+
+                return [
+                    "status" => true,
+                    "code" => 200,
+                    "messager" => "Password changed successfully."
+                ];
+            }
+
+            return [
+                "status" => false,
+                "code" => 500,
+                "messager" => "Incorrect code"
+            ];
+        }
+
+        return [
+            "status" => false,
+            "code" => 500,
+            "messager" => "The user does not exist."
+        ];
+    }
 }
