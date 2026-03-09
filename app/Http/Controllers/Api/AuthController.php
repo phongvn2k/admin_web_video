@@ -4,18 +4,18 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Helper\WebHelper;
-use App\Service\UserService;
+use App\Service\AuthService;
 
-class UserController extends \App\Http\Controllers\Controller
+class AuthController extends \App\Http\Controllers\Controller
 {
     public $webHelper;
-    public $userService;
+    public $authService;
     public function __construct(
         WebHelper $webHelper,
-        UserService $userService
+        AuthService $authService
     ){
         $this->webHelper = $webHelper;
-        $this->userService = $userService;
+        $this->authService = $authService;
     }
 
     public function addUser(Request $request)
@@ -31,7 +31,7 @@ class UserController extends \App\Http\Controllers\Controller
         }
 
         $payload = $request->input('payload');
-        $addUser = $this->userService->addUser($payload, $webAuth);
+        $addUser = $this->authService->addUser($payload, $webAuth);
 
         if ($addUser['status'] == false) {
             return response()->json($addUser, 500);
@@ -53,7 +53,7 @@ class UserController extends \App\Http\Controllers\Controller
         }
 
         $payload = $request->input('payload');
-        $addUser = $this->userService->getUser($payload, $webAuth);
+        $addUser = $this->authService->getUser($payload, $webAuth);
 
         if ($addUser['status'] == false) {
             return response()->json($addUser, 500);
@@ -75,12 +75,34 @@ class UserController extends \App\Http\Controllers\Controller
         }
 
         $payload = $request->input('payload');
-        $user = $this->userService->login($payload, $webAuth);
+        $user = $this->authService->login($payload, $webAuth);
 
         if ($user['status'] == false) {
             return response()->json($user, 500);
         }
 
         return response()->json($user);
+    }
+
+    public function getCodeResetPassword(Request $request)
+    {
+        $auth = $request->input('auth');
+        $webAuth = $this->webHelper->checkWeb($auth);
+
+        if ($webAuth == false) {
+            return response()->json([
+                'code' => 400,
+                'messager' => "unauthorized"
+            ], 400);
+        }
+
+        $payload = $request->input('payload');
+        $code = $this->authService->getCodeResetPassword($payload, $webAuth);
+
+        if ($code['status'] == false) {
+            return response()->json($code, 500);
+        }
+
+        return response()->json($code);
     }
 }

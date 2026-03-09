@@ -5,8 +5,10 @@ namespace App\Service;
 use Illuminate\Support\Facades\Hash;
 use App\Repository\UserRepository;
 use App\Repository\WebsiteRepository;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 
-class UserService
+class AuthService
 {
     public $userRepository;
     public $websiteRepository;
@@ -135,6 +137,35 @@ class UserService
                     "email" => $user->email,
                     "google_id" => $user->google_id,
                     "role" => $user->role,
+                ]
+            ];
+        }
+
+        return [
+            "status" => false,
+            "code" => 500,
+            "messager" => "The user does not exist."
+        ];
+    }
+
+    public function getCodeResetPassword($payload, $webAuth)
+    {
+        $user = $this->getUserById($payload['user_id'], $webAuth);
+        if ($user) {
+            $code = Str::random(6);
+            $resetTime = now()->utc();
+            $this->userRepository->updateUserById(
+                $payload['user_id'],
+                ["reset_code" => $code, "reset_time" => $resetTime]
+            );
+
+            return [
+                "status" => true,
+                "code" => 200,
+                "user" => [
+                    "id" => $user->id,
+                    "reset_code" => $code,
+                    "reset_time" => $resetTime
                 ]
             ];
         }

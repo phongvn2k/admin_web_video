@@ -57,4 +57,9 @@ class UserRepository
 
         return false;
     }
+
+    public function updateUserById($id, $data)
+    {
+        User::where('id', $id)->update($data);
+    }
 }
