@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Hash;
 use App\Repository\UserRepository;
 use App\Repository\WebsiteRepository;
 use Illuminate\Support\Str;
-use Carbon\Carbon;
 
 class AuthService
 {
@@ -150,12 +149,12 @@ class AuthService
 
     public function getCodeResetPassword($payload, $webAuth)
     {
-        $user = $this->getUserById($payload['user_id'], $webAuth);
+        $user = $this->getUserByEmail($payload['email'], $webAuth);
         if ($user) {
-            $code = Str::random(6);
+            $code = Str::lower(Str::random(6));
             $resetTime = now()->utc();
             $this->userRepository->updateUserById(
-                $payload['user_id'],
+                $user->id,
                 ["reset_code" => $code, "reset_time" => $resetTime]
             );
 
@@ -163,7 +162,7 @@ class AuthService
                 "status" => true,
                 "code" => 200,
                 "user" => [
-                    "id" => $user->id,
+                    "email" => $user->email,
                     "reset_code" => $code,
                     "reset_time" => $resetTime
                 ]
@@ -179,14 +178,14 @@ class AuthService
 
     public function resetPassword($payload, $webAuth)
     {
-        $user = $this->getUserById($payload['user_id'], $webAuth);
+        $user = $this->getUserByEmail($payload['email'], $webAuth);
         if ($user) {
             $code = $user->reset_code;
 
             if ($code == $payload['reset_code']) {
                 $newPass = Hash::make($payload['new-pass']);
                 $this->userRepository->updateUserById(
-                    $payload['user_id'],
+                    $user->id,
                     ["password" => $newPass]
                 );
 
