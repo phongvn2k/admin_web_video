@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Repository\UserRepository;
 use App\Repository\WebsiteRepository;
 
-class WebHelperService
+class UserService
 {
     public $userRepository;
     public $websiteRepository;
@@ -41,7 +41,7 @@ class WebHelperService
         if (empty($data['google_id'])) {
             $check = $this->getUserByEmail($data['email'], $webAuth);
         } else {
-            $check = $this->getUserByGoogleId($data['email'], $webAuth);
+            $check = $this->getUserByGoogleId($data['google_id'], $webAuth);
         }
 
         if ($check == false) {
@@ -62,6 +62,57 @@ class WebHelperService
             "status" => false,
             "code" => 500,
             "messager" => "The account already exists."
+        ];
+    }
+
+    public function checkLoginEmail($email, $password, $webAuth)
+    {
+        $user = $this->getUserByEmail($email, $webAuth);
+
+        if ($user && Hash::check($password, $user->password)) {
+            return $user;
+        }
+
+        return false;
+    }
+
+    public function checkLoginGoogle($googleId, $webAuth)
+    {
+        $user = $this->getUserByGoogleId($googleId, $webAuth);
+        if ($user) {
+            return $user;
+        }
+
+        return false;
+    }
+
+    public function login($payload, $webAuth)
+    {
+        if (empty($payload['google_id'])) {
+            $check = $this->checkLoginEmail($payload['email'], $payload['password'], $webAuth);
+        } else {
+            $check = $this->checkLoginGoogle($payload['google_id'], $webAuth);
+        }
+
+        if ($check == false) {
+            return [
+                "status" => false,
+                "code" => 500,
+                "messager" => "Login error"
+            ];
+        }
+
+        return [
+            "status" => true,
+            "code" => 200,
+            "messager" => "Login successfully",
+            "user" => [
+                "id" => $check->id,
+                "name" => $check->name,
+                "email" => $check->email,
+                "google_id" => $check->google_id,
+                "role" => $check->role,
+            ]
         ];
     }
 }
