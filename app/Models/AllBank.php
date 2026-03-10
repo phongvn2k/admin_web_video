@@ -5,12 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Bank extends Model
+class AllBank extends Model
 {
     use HasFactory;
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $table = 'all_bank';
+    public $timestamps = false;
 }
