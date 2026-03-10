@@ -83,7 +83,7 @@ class UserService
             $bankInfo = $this->allBankRepository->getBankById($bank->bank_id, $webAuth->id);
 
             return [
-                "status" => false,
+                "status" => true,
                 "data" => [
                     "id" => $bank->id,
                     "bank_name" => $bankInfo->name,
