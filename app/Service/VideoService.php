@@ -68,7 +68,7 @@ class VideoService
         $description = $payload['video']['description'];
         $file = $payload['video']['file'];
         $hashtag = $payload['video']['hashtag'];
-        $slug = $payload['video']['hashtag'];
+        $slug = $payload['video']['slug'];
 
         $statusC = $this->checkPayloadAddVideo($title, $description, $slug, $hashtag, $authWeb);
         if ($statusC['status'] == False) {
