@@ -98,4 +98,13 @@ class VideoRepository
     {
         Video::where('id', $videoId)->decrement('count_like');
     }
+
+    public function deleteVideo($videoId)
+    {
+        $data = Video::where("id", $videoId)->first();
+
+        if ($data) {
+            $data->delete();
+        }
+    }
 }

@@ -82,4 +82,92 @@ class UserController extends \App\Http\Controllers\Controller
 
         return response()->json($data);
     }
+
+    public function followUser(Request $request)
+    {
+        $auth = $request->input('auth');
+        $webAuth = $this->webHelper->checkWeb($auth);
+
+        if ($webAuth == false) {
+            return response()->json([
+                'code' => 400,
+                'messager' => "unauthorized"
+            ], 400);
+        }
+
+
+        $payload = $request->input('payload');
+        $data = $this->userService->followUser($payload);
+        if ($data['status'] == false) {
+            return response()->json($data, 500);
+        }
+
+        return response()->json($data);
+    }
+
+    public function unFollowUser(Request $request)
+    {
+        $auth = $request->input('auth');
+        $webAuth = $this->webHelper->checkWeb($auth);
+
+        if ($webAuth == false) {
+            return response()->json([
+                'code' => 400,
+                'messager' => "unauthorized"
+            ], 400);
+        }
+
+
+        $payload = $request->input('payload');
+        $data = $this->userService->unFollowUser($payload);
+        if ($data['status'] == false) {
+            return response()->json($data, 500);
+        }
+
+        return response()->json($data);
+    }
+
+    public function addPayment(Request $request)
+    {
+        $auth = $request->input('auth');
+        $webAuth = $this->webHelper->checkWeb($auth);
+
+        if ($webAuth == false) {
+            return response()->json([
+                'code' => 400,
+                'messager' => "unauthorized"
+            ], 400);
+        }
+
+
+        $payload = $request->input('payload');
+        $data = $this->userService->addPayment($payload);
+        if ($data['status'] == false) {
+            return response()->json($data, 500);
+        }
+
+        return response()->json($data);
+    }
+
+    public function viewProcess(Request $request)
+    {
+        $auth = $request->input('auth');
+        $webAuth = $this->webHelper->checkWeb($auth);
+
+        if ($webAuth == false) {
+            return response()->json([
+                'code' => 400,
+                'messager' => "unauthorized"
+            ], 400);
+        }
+
+
+        $payload = $request->input('payload');
+        $data = $this->userService->viewProcess($payload);
+        if ($data['status'] == false) {
+            return response()->json($data, 500);
+        }
+
+        return response()->json($data);
+    }
 }

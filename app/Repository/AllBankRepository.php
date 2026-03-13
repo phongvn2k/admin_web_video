@@ -46,4 +46,17 @@ class AllBankRepository
         $data = AllBank::where('id', $bankId)->first();
         return $data;
     }
+
+    public function getUserbankByUser($userId)
+    {
+        $data = Userbank::where('user_id', $userId)->first();
+        return $data;
+    }
+
+    public function getBankInfo($bankId)
+    {
+        $data = AllBank::where('id', $bankId)->first();
+
+        return $data;
+    }
 }

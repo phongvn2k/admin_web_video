@@ -32,6 +32,10 @@ Route::post('/reset-pass', [AuthController::class, 'resetPass']);
 Route::post('/get-bank', [UserController::class, 'getBank']);
 Route::post('/add-bank', [UserController::class, 'addBank']);
 Route::post('/get-bank/user-id', [UserController::class, 'getBankByUserId']);
+Route::post('/user/follow-user', [UserController::class, 'followUser']);
+Route::post('/user/un-follow-user', [UserController::class, 'unFollowUser']);
+Route::post('/user/add/payment', [UserController::class, 'addPayment']);
+Route::post('/user/payment/view/process', [UserController::class, 'viewProcess']);
 
 // video ===========================================
 Route::post('/video/add-video', [VideoController::class, 'addVideo']);
@@ -45,3 +49,4 @@ Route::post('/video/view', [VideoController::class, 'viewVideo']);
 Route::post('/video/get-full-info-video', [VideoController::class, 'getFullInfoVideo']);
 Route::post('/video/add-like-video', [VideoController::class, 'addLikeVideo']);
 Route::post('/video/un-like-video', [VideoController::class, 'unLikeVideo']);
+Route::post('/video/delete-video', [VideoController::class, 'deleteVideo']);

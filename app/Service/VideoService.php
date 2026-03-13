@@ -217,4 +217,29 @@ class VideoService
             "mess" => "success"
         ];
     }
+
+    public function deleteVideo($payload)
+    {
+        $checkVideo = $this->videoRepository->getVideoById($payload['video_id']);
+        if ($checkVideo) {
+            if ($checkVideo->id == $payload['video_id'] && $checkVideo->user_id == $payload['user_id']) {
+                $this->videoRepository->deleteVideo($payload['video_id']);
+
+                return [
+                    "status" => true,
+                    "mess" => "Deleted successfully"
+                ];
+            }
+
+            return [
+                "status" => false,
+                "mess" => "No deletion rights"
+            ];
+        }
+
+        return [
+            "status" => false,
+            "mess" => "The video does not exist."
+        ];
+    }
 }

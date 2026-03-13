@@ -62,4 +62,31 @@ class UserRepository
     {
         User::where('id', $id)->update($data);
     }
+
+    public function addFollow($userId)
+    {
+        User::where('id', $userId)->increment('count_follow');
+    }
+
+    public function unFollow($userId)
+    {
+        User::where('id', $userId)->decrement('count_follow');
+    }
+
+    public function getUserById($userid)
+    {
+        $data = User::where("id", $userid)->first();
+
+        return $data;
+    }
+
+    public function exceptAvailable($userId, $amount)
+    {
+        User::where('id', $userId)->decrement('available_amount', $amount);
+    }
+
+    public function addHold($userId, $amount)
+    {
+        User::where('id', $userId)->increment('available_amount', $amount);
+    }
 }
