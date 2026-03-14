@@ -177,7 +177,7 @@ class UserService
         return $allProcess->id;
     }
 
-    public function addPayment($payload)
+    public function addPayment($payload, $webAuth)
     {
         $user = $this->userRepository->getUserById($payload['user_id']);
 
@@ -197,12 +197,13 @@ class UserService
                     "user_id" => $payload['user_id'],
                     "amount" => $payload['amount'],
                     "payment_process_id" => $process,
+                    "website_id" => $webAuth->id,
                 ]);
 
                 $this->userRepository->exceptAvailable($payload['user_id'], $payload['amount']);
                 $this->userRepository->addHold($payload['user_id'], $payload['amount']);
 
-                $paymnetProcess = $this->getPaymentInfo($payment->id);
+                $paymnetProcess = $this->getPaymentInfo($payment->id, $webAuth->id);
 
                 return [
                     "status" => true,
@@ -229,9 +230,9 @@ class UserService
         ];
     }
 
-    public function getPaymentInfo($paymentId)
+    public function getPaymentInfo($paymentId, $webId)
     {
-        $process = $this->paymentProcessRepository->getAll();
+        $process = $this->paymentProcessRepository->getAll($webId);
         $payment = $this->paymentRepository->getPaymentById($paymentId);
 
         $data = [];
@@ -250,12 +251,12 @@ class UserService
         return $data;
     }
 
-    public function viewProcess($payload)
+    public function viewProcess($payload, $webAuth)
     {
         $checkPayment = $this->paymentRepository->getPaymentById($payload['payment_id']);
         if ($checkPayment) {
             if ($checkPayment->user_id == $payload['user_id']) {
-                $pro = $this->getPaymentInfo($payload['payment_id']);
+                $pro = $this->getPaymentInfo($payload['payment_id'], $webAuth->id);
                 return [
                     "status" => true,
                     "process" => $pro,

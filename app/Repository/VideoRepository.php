@@ -107,4 +107,11 @@ class VideoRepository
             $data->delete();
         }
     }
+
+    public function getVideoByWebsite($websiteId)
+    {
+        $data = Video::where("website_id", $websiteId)->get();
+
+        return $data;
+    }
 }

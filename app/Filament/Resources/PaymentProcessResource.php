@@ -2,41 +2,40 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BankResource\Pages;
-use App\Filament\Resources\BankResource\RelationManagers;
-use App\Models\AllBank;
+use App\Filament\Resources\PaymentProcessResource\Pages;
+use App\Filament\Resources\PaymentProcessResource\RelationManagers;
+use App\Models\PaymentProcess;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Facades\Filament;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
 
-class BankResource extends Resource
+class PaymentProcessResource extends Resource
 {
-    protected static ?string $model = AllBank::class;
+    protected static ?string $model = PaymentProcess::class;
 
     protected static ?string $navigationGroup = 'Cài đặt';
 
-    protected static ?string $modelLabel = 'Ngân hàng';
+    protected static ?string $modelLabel = 'Tiến trình rút tiền';
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-library';
+    protected static ?string $navigationIcon = 'heroicon-o-arrow-path';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->label('Tên ngân hàng')
+                    ->label('Tiến trình')
                     ->required()
                     ->maxLength(255),
 
-                TextInput::make('code')
-                    ->label('Mã ngân hàng')
+                TextInput::make('order')
+                    ->label('Thứ tự')
                     ->required()
                     ->maxLength(50),
             ]);
@@ -47,11 +46,11 @@ class BankResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Tên ngân hàng')
+                    ->label('Tiến trình')
                     ->sortable(),
 
-                TextColumn::make('code')
-                    ->label('Mã ngân hàng')
+                TextColumn::make('order')
+                    ->label('Thứ tự')
                     ->sortable(),
             ])
             ->filters([
@@ -77,15 +76,9 @@ class BankResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListBanks::route('/'),
-            'create' => Pages\CreateBank::route('/create'),
-            'edit' => Pages\EditBank::route('/{record}/edit'),
+            'index' => Pages\ListPaymentProcesses::route('/'),
+            'create' => Pages\CreatePaymentProcess::route('/create'),
+            'edit' => Pages\EditPaymentProcess::route('/{record}/edit'),
         ];
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->where('website_id', Filament::getTenant()->id);
     }
 }

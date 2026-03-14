@@ -6,10 +6,10 @@ use Filament\Pages\Dashboard as BaseDashboard;
 
 class Dashboard extends BaseDashboard
 {
-    public function getWidgets(): array
+    public function getHeaderWidgets(): array
     {
         return [
-            \App\Filament\Widgets\UserChart::class,
+            // để trống để bỏ widget mặc định
         ];
     }
 }

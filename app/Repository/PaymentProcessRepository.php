@@ -8,13 +8,13 @@ class PaymentProcessRepository
 {
     public function getOne()
     {
-        $order = PaymentProcess::orderBy('order', 'desc')->first();
+        $order = PaymentProcess::orderBy('order', 'asc')->first();
         return $order;
     }
 
-    public function getAll()
+    public function getAll($webId)
     {
-        $order = PaymentProcess::orderBy('order', 'desc')->get();
+        $order = PaymentProcess::where('website_id', $webId)->orderBy('order', 'asc')->get();
         return $order;
     }
 }

@@ -141,7 +141,7 @@ class UserController extends \App\Http\Controllers\Controller
 
 
         $payload = $request->input('payload');
-        $data = $this->userService->addPayment($payload);
+        $data = $this->userService->addPayment($payload, $webAuth);
         if ($data['status'] == false) {
             return response()->json($data, 500);
         }
@@ -163,7 +163,7 @@ class UserController extends \App\Http\Controllers\Controller
 
 
         $payload = $request->input('payload');
-        $data = $this->userService->viewProcess($payload);
+        $data = $this->userService->viewProcess($payload, $webAuth);
         if ($data['status'] == false) {
             return response()->json($data, 500);
         }

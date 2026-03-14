@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Models\User;
+use App\Models\UserWebsite;
 
 class UserRepository
 {
@@ -88,5 +89,16 @@ class UserRepository
     public function addHold($userId, $amount)
     {
         User::where('id', $userId)->increment('available_amount', $amount);
+    }
+
+    public function getAllUserWeb($webId)
+    {
+        $data = UserWebsite::where('website_id', $webId)
+            ->select('user_id')
+            ->groupBy('user_id')
+            ->havingRaw('COUNT(user_id) = 1')
+            ->get();
+
+        return $data;
     }
 }
