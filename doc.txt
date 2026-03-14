@@ -1,0 +1,4 @@
+role user
+    1->admin all
+    2->admin-web
+    3->user
